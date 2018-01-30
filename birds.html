@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Övning firebase fåglar</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+
+    <style media="screen">
+      body {
+        background-color: #0169a4;
+        color: #FFF;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 18px;
+        margin:5px;
+        padding: 10px;
+      }
+      h1{
+        text-align: center;
+      }
+      ul{
+        border: 1px solid #FFF;
+        display: block;
+        width: 50%;
+        background-color: #00a4e4;
+
+      }
+      #myButton, #searchButton{
+        background-color: #0169a4;
+        border: 1px solid #FFF;
+        border-radius: 10px;
+        color: #FFF;
+        font-size: 20px;
+        padding:5px;
+        margin-top:10px;
+        left: 50%;
+
+      }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
+    <script>
+    window.addEventListener('load', function(){
+
+
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyDBOpoyDu75iNgKDBu80sGjgF1jTZ67Xrs",
+        authDomain: "fir-firebase-birds.firebaseapp.com",
+        databaseURL: "https://fir-firebase-birds.firebaseio.com",
+        projectId: "fir-firebase-birds",
+        storageBucket: "fir-firebase-birds.appspot.com",
+        messagingSenderId: "478731307247"
+      };
+      firebase.initializeApp(config);
+
+      const db = firebase.database();
+
+      //hämta värde från användaren
+      let myButton = document.getElementById('myButton');
+      let birdName = document.getElementById('name');
+      let birdColor = document.getElementById('color');
+      let birdWings = document.getElementById('wings');
+
+     myButton.addEventListener('click',function(){
+       let newBird = {
+         namn: birdName.value,
+         färg: birdColor.value,
+         vingspann: birdWings.value,
+    }
+        db.ref().push(newBird);
+
+      });
+      //sökväg i databasen ----NOT working jet----
+      let search = document.getElementById('searchInput');
+      let searchButton = document.getElementById('searchButton');
+      searchButton.addEventListener('click', function(){
+        console.log(search.value);
+      });
+
+
+      console.log('we start here');
+      db.ref('/').on('value', snap => {
+        console.log('on value hämtar hela databasen ');
+        let data = snap.val();
+        console.log(data);
+
+        let divBird = document.getElementById('birds');
+        for(let bird in data){
+          let x = data[bird];
+          console.log(x)
+          const newDiv = document.createElement('ul');
+          newDiv.innerHTML = `<li>Namn: <strong><i>${x.namn}</i></strong></li> <li> Färg: ${x.färg}</li> <li>Vingspann: ${x.vingspann}</li><br>`;
+          divBird.appendChild(newDiv);
+        }
+      });
+
+      })
+    </script>
+  </head>
+  <body>
+    <h1>Fåglar - firebase övning</h1>
+    <div id="birds">
+    </div>
+    <section class="form">
+      <h2>Lägg till fågel i listan: </h2>
+      <input id="name"type="text" name="name" placeholder="Namn" required>
+      <input id="color"type="text" name="color" placeholder="Färg" required>
+      <input id="wings" type="text" name="wings" placeholder="Vingspann"required>
+      <button id='myButton'type="button" name="button">Skicka</button>
+    </section>
+
+      <section class="change">
+        <h2>Ändra listan: </h2>
+        <input id="nameChange"type="text" name="name" placeholder="Namn" required>
+        <input id="colorChange"type="text" name="color" placeholder="Färg" required>
+        <input id="wingsChange" type="text" name="wings" placeholder="Vingspann"required>
+        <input id="searchInput" type="text" placeholder="Sök"name="">
+        <button id='searchButton'type="button" name="button">Ändra</button>
+    </section>
+  </body>
+</html>
