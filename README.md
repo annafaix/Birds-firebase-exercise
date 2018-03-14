@@ -1,1 +1,1 @@
-This is a school exercise about Firebase.
+This is a school exercise with Firebase.
